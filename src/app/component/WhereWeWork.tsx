@@ -4,31 +4,34 @@ import { useEffect, useRef } from 'react';
 import { Fancybox as NativeFancybox } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import ContactSection from './ContactSection';
-
+import CaseStudiesGrid from '../case-studies/CaseStudiesGrid';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const locations = [
-  {
-    title: 'Houston, United States',
-    image: '/images/wherrewework.png',
-    alt: 'Houston Skyline',
-  },
-  {
-    title: 'London, United Kingdom',
-    image: '/images/locationwork.png',
-    alt: 'London Tower Bridge',
-  },
-  {
-    title: 'Karachi, Pakistan',
-    image: '/images/wherework.png',
-    alt: 'Karachi Night View',
-  },
-];
+type Location = {
+  title: string;
+  image: string;
+  alt: string;
+};
 
-const WhereWeWork = () => {
+interface WhereWeWorkProps {
+  title?: string;
+  titleSize?: string; // ⬅️ add this
+  paragraph: string;
+  locations: Location[];
+  showCaseStudies?: boolean;
+  showContactSection?: boolean;
+}
+
+const WhereWeWork: React.FC<WhereWeWorkProps> = ({
+  title = 'Where we work',
+  paragraph,
+  locations,
+  showCaseStudies = true,
+  showContactSection = true,
+}) => {
   const paragraphRef = useRef<HTMLParagraphElement>(null);
 
   // ✅ Fancybox binding
@@ -74,25 +77,25 @@ const WhereWeWork = () => {
     };
   }, []);
 
-  const paragraph = `Based in Karachi, our core team brings a global perspective to every project. We proudly collaborate with clients around the world, combining creative insight with streamlined remote processes to ensure smooth communication and seamless delivery, no matter where you are.`;
-
   const renderWords = paragraph.split(' ').map((word, index) => (
     <span
       key={index}
       className="word inline-block mr-1 will-change-[color]"
-      style={{ color: '#4B4B4B' }} // Initial gray
+      style={{ color: '#4B4B4B' }}
     >
       {word}
     </span>
   ));
 
   return (
-    <section className="bg-gradient-to-b from-black to-[#6C54A0] text-white py-0 px-4 text-center">
-      <h2 className=" sm:text-[52px]   md:text-[100px] lg:text-[120px] font-bold bg-gradient-to-r from-[#6C54A0] to-[#A890CD] bg-clip-text text-transparent ">
-        Where we work
-      </h2>
+    <section className="bg-gradient-to-b from-black via-[#4E3682] to-[#000] text-white px-2 py-[75px] md:py-5 md:px-4 text-center">
+<h2 className="text-[40px] md:text-[72px] lg:text-[96px] font-bold bg-gradient-to-r from-[#6C54A0] to-[#A890CD] bg-clip-text text-transparent">
+  {title}
+</h2>
 
-      <div className="flex flex-wrap justify-center gap-8 mt-[-52]   mb-20">
+
+
+      <div className="flex flex-wrap justify-center gap-8 sm:mt-[0px] md:mt-[-52] mb-20">
         {locations.map((loc, index) => (
           <a
             key={index}
@@ -111,19 +114,22 @@ const WhereWeWork = () => {
         ))}
       </div>
 
-      {/* GSAP animated paragraph */}
-      <div className='mx-w-7xl  w-7xl  px-4 mx-auto'>
-      <p
-        ref={paragraphRef}
-        className="max-w-xl ml-auto sm:text-[22px]    md:text-[24px] text-start leading-relaxed flex flex-wrap gap-y-2 "
-      >
-        {renderWords}
-      </p>
-</div>
-      {/* Contact Form Component */}
-      <div className="mt-20">
-        <ContactSection />
+      <div className="max-w-7xl w-full px-2 md:px-5 mx-auto">
+        <p
+          ref={paragraphRef}
+          className="max-w-2xl ml-auto sm:text-[22px] mb-[60px] md:mb-[0px] md:text-[28px] font-bold text-start sm:leading-[25px] md:leading-[40px] flex flex-wrap gap-y-2"
+        >
+          {renderWords}
+        </p>
+
+        {showCaseStudies && <CaseStudiesGrid />}
       </div>
+
+      {showContactSection && (
+        <div className="mt-20">
+          <ContactSection />
+        </div>
+      )}
     </section>
   );
 };

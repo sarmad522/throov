@@ -9,16 +9,13 @@ interface FlipCardProps {
 
 const FlipCard: React.FC<FlipCardProps> = ({ title, items, frontImage, backImage }) => {
   return (
-    <div
-      className="  w-96 h-96 md:w-[25%]   md:h-96 flex-shrink-0 group"
-      style={{ perspective: "1000px" }}
-    >
+    <div className="w-[98%] sm:w-full md:w-[25%] h-96 px-0 sm:px-5 md:px-1 flex-shrink-0 group">
       {/* Flip wrapper */}
       <div className="relative  w-full h-full transform [transform-style:preserve-3d] group-hover:rotate-x-180 duration-[1200ms] ease-in-out will-change-transform">
 
         {/* Front Side */}
         <div
-          className="absolute w-full h-full rounded-2xl text-white p-6 [backface-visibility:hidden] flex flex-col justify-center bg-cover bg-center"
+          className="absolute w-full h-full rounded text-white p-6 [backface-visibility:hidden] flex flex-col justify-center bg-cover bg-center"
           style={{ backgroundImage: `url(${frontImage})` }}
         >
           <div className="px-2 py-2 h-full flex justify-between items-start flex-col">
@@ -33,7 +30,7 @@ const FlipCard: React.FC<FlipCardProps> = ({ title, items, frontImage, backImage
 
         {/* Back Side */}
         <div
-          className="absolute w-full h-full rounded-2xl text-white p-6 [backface-visibility:hidden] bg-cover bg-center transform rotate-x-180"
+          className="absolute w-full h-full rounded text-white p-6 [backface-visibility:hidden] bg-cover bg-center transform rotate-x-180"
           style={{ backgroundImage: `url(${backImage})` }}
         >
           <div className="px-2 py-2 h-full flex justify-between items-start flex-col">

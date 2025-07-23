@@ -3,54 +3,43 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 gsap.registerPlugin(ScrollTrigger);
 
-const MissionVisionSection = () => {
-  const headingWrapperRef = useRef<HTMLDivElement>(null);
-  const headingTrackRef = useRef<HTMLDivElement>(null);
-  const textContainerRef = useRef<HTMLDivElement>(null);
+type Props = {
 
-  // Horizontal heading scroll
+  paragraph?: string;
+};
+
+export default function MissionVisionSection({
+  paragraph = ` At throov we turn ideas into visuals that speak. From branding to digital design, we craft creative solutions that are bold, thoughtful, and built to stand out. Whether you are launching something new or leveling up your look, we bring clarity, style and purpose to every pixel.`,
+}: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  /* ── ہر بار paragraph بدلے، DOM دوبارہ بنے ───────────────── */
   useEffect(() => {
-    const wrapper = headingWrapperRef.current;
-    const track = headingTrackRef.current;
-    if (!wrapper || !track) return;
+    const el = containerRef.current;
+    if (!el) return;
 
-    track.style.transform = 'translateX(0)';
-    Array.from(track.children).forEach((el: any) => {
-      el.style.color = '#A890CD';
-    });
+    // 1️⃣ نئی HTML inject کر دیں
+    el.innerHTML = paragraph
+      .split(' ')
+      .map(word => `<span class="word inline-block mr-2">${word}</span>`)
+      .join(' ');
 
-    ScrollTrigger.create({
-      trigger: wrapper,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-      onUpdate: ({ progress }) => {
-        track.style.transform = `translateX(${-100 * progress}vw)`;
+    // 2️⃣ پرانے triggers kill صرف اسی container کے
+    ScrollTrigger.getAll()
+      .filter(t => (t.vars as any).trigger && el.contains((t.vars as any).trigger))
+      .forEach(t => t.kill());
 
-        const r = Math.round(168 + (255 - 168) * progress);
-        const g = Math.round(144 + (255 - 144) * progress);
-        const b = Math.round(205 + (255 - 205) * progress);
-        Array.from(track.children).forEach((el: any) => {
-          el.style.color = `rgb(${r},${g},${b})`;
-        });
-      },
-    });
-  }, []);
-
-  // Scroll text fade-in word by word
-  useEffect(() => {
-    const words = textContainerRef.current?.querySelectorAll('.word');
-    if (!words) return;
-
-    words.forEach((word: any) => {
+    // 3️⃣ نئے لفظوں پر animation لگائیں
+    el.querySelectorAll<HTMLSpanElement>('.word').forEach(word => {
       gsap.fromTo(
         word,
-        { color: '#4B4B4B' },
+        { opacity: 0.4, y: 28 },
         {
-          color: '#ffffff',
+          opacity: 1,
+          y: 0,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: word,
             start: 'top 95%',
@@ -60,55 +49,17 @@ const MissionVisionSection = () => {
         }
       );
     });
+  }, [paragraph]);
 
-    return () => ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-  }, []);
-
-  const paragraph = `At throov we turn ideas into visuals that speak. From branding to digital design, we craft creative solutions that are bold, thoughtful, and built to stand out. Whether you are launching something new or leveling up your look, we bring clarity, style and purpose to every pixel.`;
-
-  const renderWords = paragraph.split(' ').map((word, index) => (
-    <span key={index} className="word inline-block mr-2">
-      {word}
-    </span>
-  ));
-
+  /* ── JSX ─────────────────────────────────────────────────── */
   return (
-    <section className=" " id='down'>
-      {/* Horizontal Heading Scroll */}
-      <div ref={headingWrapperRef} className="md:h-[40vh]">
-        <div className="sticky top-0 overflow-hidden">
-          <div
-            ref={headingTrackRef}
-            className="flex flex-nowrap"
-            style={{ width: '200vw' }}
-          >
-            <div
-              className="flex-shrink-0 flex items-center justify-center font-extrabold"
-              style={{ fontSize: '15vw', minWidth: '120vw', whiteSpace: 'nowrap' }}
-            >
-              Mission&Vision
-            </div>
-            <div
-              className="flex-shrink-0 flex items-center justify-center font-extrabold"
-              style={{ fontSize: '15vw', minWidth: '120vw', whiteSpace: 'nowrap' }}
-            >
-              Mission&Vision
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Word-by-Word Fade-In Text */}
+    <section id="down">
       <div className="py-32 px-6">
         <div
-          ref={textContainerRef}
-          className="max-w-5xl mx-auto text-[2.5rem] leading-snug font-bold flex flex-wrap gap-y-4"
-        >
-          {renderWords}
-        </div>
+          ref={containerRef}
+          className="max-w-5xl mx-auto text-[2.5rem] leading-snug font-bold flex flex-wrap gap-y-4 will-change-transform"
+        />
       </div>
     </section>
   );
-};
-
-export default MissionVisionSection;
+}

@@ -21,6 +21,7 @@ const PartnersSlider = () => {
       spacing: 20,
     },
     breakpoints: {
+      
       '(max-width: 768px)': {
         slides: { perView: 2 },
       },
@@ -39,7 +40,7 @@ const PartnersSlider = () => {
   });
 
   return (
-    <section className="py-20 bg-black text-white text-center">
+    <section className=" py-5 sm:py-10 md:py-20 bg-black text-white text-center">
       <h2 className="text-lg font-light mb-8">Partners with</h2>
 
       <div

@@ -47,7 +47,7 @@ const MissionVisionScrollText: React.FC = () => {
       <div className="sticky top-0  overflow-hidden">
         <div
           ref={trackRef}
-          className="flex flex-nowrap"
+          className="flex flex-nowrap  p-4"
           style={{ width: '200vw' }}
         >
           <div
@@ -58,7 +58,7 @@ const MissionVisionScrollText: React.FC = () => {
               whiteSpace: 'nowrap',
             }}
           >
-            Mission&nbsp;&amp;&nbsp;Vision
+            Mission&Vision
           </div>
           <div
             className="flex-shrink-0 flex items-center justify-center font-extrabold"
@@ -68,7 +68,7 @@ const MissionVisionScrollText: React.FC = () => {
               whiteSpace: 'nowrap',
             }}
           >
-            Mission&nbsp;&amp;&nbsp;Vision
+            Mission&Vision
           </div>
         </div>
       </div>
